@@ -32,6 +32,9 @@ dropna = False # not rlly necessary for lgbm, built in handler for nan rows
 testSetSize = 0.2
 validSetSize = 0.2
 
+subject = ""
+session = ""
+
 validationR2 = pandas.DataFrame(columns = ['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'])
 validationPearsonR = pandas.DataFrame(columns = ['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'])
 
@@ -186,27 +189,27 @@ shapValues5 = explainer5(fold5XTest)
 IO
 '''
 validationR2.loc[0] = [fold1R2, fold2R2, fold3R2, fold4R2, fold5R2]
-validationR2.to_csv(os.path.join(savePath, "validationR2.csv"), index=False)
+validationR2.to_csv(os.path.join(savePath, f"{subject}_{session}_validationR2.csv"), index=False)
 
 validationPearsonR.loc[0] = [fold1PearsonR, fold2PearsonR, fold3PearsonR, fold4PearsonR, fold5PearsonR]
-validationPearsonR.to_csv(os.path.join(savePath, "validationPearsonR.csv"), index=False)
+validationPearsonR.to_csv(os.path.join(savePath, f"{subject}_{session}_validationPearsonR.csv"), index=False)
 
 shapValues1 = pandas.DataFrame(shapValues1.values, columns = fold1XTest.columns)
-shapValues1.to_csv(os.path.join(savePath, "shapValuesFold1.csv"), index=False)
+shapValues1.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold1.csv"), index=False)
 shapValues2 = pandas.DataFrame(shapValues2.values, columns = fold2XTest.columns)
-shapValues2.to_csv(os.path.join(savePath, "shapValuesFold2.csv"), index=False)
+shapValues2.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold2.csv"), index=False)
 shapValues3 = pandas.DataFrame(shapValues3.values, columns = fold3XTest.columns)
-shapValues3.to_csv(os.path.join(savePath, "shapValuesFold3.csv"), index=False)
+shapValues3.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold3.csv"), index=False)
 shapValues4 = pandas.DataFrame(shapValues4.values, columns = fold4XTest.columns)
-shapValues4.to_csv(os.path.join(savePath, "shapValuesFold4.csv"), index=False)
+shapValues4.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold4.csv"), index=False)
 shapValues5 = pandas.DataFrame(shapValues5.values, columns = fold5XTest.columns)
-shapValues5.to_csv(os.path.join(savePath, "shapValuesFold5.csv"), index=False)
+shapValues5.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold5.csv"), index=False)
 
-fold1Model.save_model(os.path.join(savePath, "fold1Model.txt"))
-fold2Model.save_model(os.path.join(savePath, "fold2Model.txt"))
-fold3Model.save_model(os.path.join(savePath, "fold3Model.txt"))
-fold4Model.save_model(os.path.join(savePath, "fold4Model.txt"))
-fold5Model.save_model(os.path.join(savePath, "fold5Model.txt"))
+fold1Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold1Model.txt"))
+fold2Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold2Model.txt"))
+fold3Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold3Model.txt"))
+fold4Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold4Model.txt"))
+fold5Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold5Model.txt"))
 
 '''
 Evaluate on holdout set

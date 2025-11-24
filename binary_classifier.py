@@ -9,7 +9,7 @@ import pandas
 
 import lightgbm
 
-from sklearn.preprocessing import MinMaxScalar
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score # evan got mad at me for balanced_accuracy :( but alik said its fine so take that FWIW
 
@@ -31,6 +31,9 @@ artificialBalance = False # if classes are imbalanced, set true to artificially 
 dropna = False 
 testSetSize = 0.2
 validSetSize = 0.2
+
+subject = ""
+session = ""
 
 foldAccuracy = pandas.DataFrame(columns = ['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'])
 foldPrecision = pandas.DataFrame(columns = ['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'])
@@ -115,11 +118,11 @@ combs = list(product(
     paramGrid['learning_rate']
 ))
 print("tuning hyperparameters")
-bestParamsFold1, bestMSEFold1 = gridcv.tuneLGBClassifierBinaryParameters(combs, fold1XTrain, fold1YTrain, fold1XTest, fold1YTest)
-bestParamsFold2, bestMSEFold2 = gridcv.tuneLGBClassifierBinaryParameters(combs, fold2XTrain, fold2YTrain, fold2XTest, fold2YTest)
-bestParamsFold3, bestMSEFold3 = gridcv.tuneLGBClassifierBinaryParameters(combs, fold3XTrain, fold3YTrain, fold3XTest, fold3YTest)
-bestParamsFold4, bestMSEFold4 = gridcv.tuneLGBClassifierBinaryParameters(combs, fold4XTrain, fold4YTrain, fold4XTest, fold4YTest)
-bestParamsFold5, bestMSEFold5 = gridcv.tuneLGBClassifierBinaryParameters(combs, fold5XTrain, fold5YTrain, fold5XTest, fold5YTest)
+bestParamsFold1, _ = gridcv.tuneLGBClassifierBinaryParameters(combs, fold1XTrain, fold1YTrain, fold1XTest, fold1YTest)
+bestParamsFold2, _ = gridcv.tuneLGBClassifierBinaryParameters(combs, fold2XTrain, fold2YTrain, fold2XTest, fold2YTest)
+bestParamsFold3, _ = gridcv.tuneLGBClassifierBinaryParameters(combs, fold3XTrain, fold3YTrain, fold3XTest, fold3YTest)
+bestParamsFold4, _ = gridcv.tuneLGBClassifierBinaryParameters(combs, fold4XTrain, fold4YTrain, fold4XTest, fold4YTest)
+bestParamsFold5, _ = gridcv.tuneLGBClassifierBinaryParameters(combs, fold5XTrain, fold5YTrain, fold5XTest, fold5YTest)
 
 fold1GBMData = lightgbm.Dataset(fold1XTrain, label=fold1YTrain)
 fold1Model = lightgbm.train(bestParamsFold1, fold1GBMData)
@@ -158,23 +161,23 @@ foldAccuracy.at[0, 'Fold 3'] = accuracy_score(fold3YTest, fold3PredLabels)
 foldAccuracy.at[0, 'Fold 4'] = accuracy_score(fold4YTest, fold4PredLabels)
 foldAccuracy.at[0, 'Fold 5'] = accuracy_score(fold5YTest, fold5PredLabels)
 
-foldPrecision.at[0, 'Fold 1'] = precision_score(fold1YTest, fold1PredLabels)
-foldPrecision.at[0, 'Fold 2'] = precision_score(fold2YTest, fold2PredLabels)
-foldPrecision.at[0, 'Fold 3'] = precision_score(fold3YTest, fold3PredLabels)
-foldPrecision.at[0, 'Fold 4'] = precision_score(fold4YTest, fold4PredLabels)
-foldPrecision.at[0, 'Fold 5'] = precision_score(fold5YTest, fold5PredLabels)
+foldPrecision.at[0, 'Fold 1'] = precision_score(fold1YTest, fold1PredLabels, zero_division=0)
+foldPrecision.at[0, 'Fold 2'] = precision_score(fold2YTest, fold2PredLabels, zero_division=0)
+foldPrecision.at[0, 'Fold 3'] = precision_score(fold3YTest, fold3PredLabels, zero_division=0)
+foldPrecision.at[0, 'Fold 4'] = precision_score(fold4YTest, fold4PredLabels, zero_division=0)
+foldPrecision.at[0, 'Fold 5'] = precision_score(fold5YTest, fold5PredLabels, zero_division=0)
 
-foldRecall.at[0, 'Fold 1'] = recall_score(fold1YTest, fold1PredLabels)
-foldRecall.at[0, 'Fold 2'] = recall_score(fold2YTest, fold2PredLabels)
-foldRecall.at[0, 'Fold 3'] = recall_score(fold3YTest, fold3PredLabels)
-foldRecall.at[0, 'Fold 4'] = recall_score(fold4YTest, fold4PredLabels)
-foldRecall.at[0, 'Fold 5'] = recall_score(fold5YTest, fold5PredLabels)
+foldRecall.at[0, 'Fold 1'] = recall_score(fold1YTest, fold1PredLabels, zero_division=0)
+foldRecall.at[0, 'Fold 2'] = recall_score(fold2YTest, fold2PredLabels, zero_division=0)
+foldRecall.at[0, 'Fold 3'] = recall_score(fold3YTest, fold3PredLabels, zero_division=0)
+foldRecall.at[0, 'Fold 4'] = recall_score(fold4YTest, fold4PredLabels, zero_division=0)
+foldRecall.at[0, 'Fold 5'] = recall_score(fold5YTest, fold5PredLabels, zero_division=0)
 
-foldF1.at[0, 'Fold 1'] = f1_score(fold1YTest, fold1PredLabels)
-foldF1.at[0, 'Fold 2'] = f1_score(fold2YTest, fold2PredLabels)
-foldF1.at[0, 'Fold 3'] = f1_score(fold3YTest, fold3PredLabels)
-foldF1.at[0, 'Fold 4'] = f1_score(fold4YTest, fold4PredLabels)
-foldF1.at[0, 'Fold 5'] = f1_score(fold5YTest, fold5PredLabels)
+foldF1.at[0, 'Fold 1'] = f1_score(fold1YTest, fold1PredLabels, zero_division=0)
+foldF1.at[0, 'Fold 2'] = f1_score(fold2YTest, fold2PredLabels, zero_division=0)
+foldF1.at[0, 'Fold 3'] = f1_score(fold3YTest, fold3PredLabels, zero_division=0)
+foldF1.at[0, 'Fold 4'] = f1_score(fold4YTest, fold4PredLabels, zero_division=0)
+foldF1.at[0, 'Fold 5'] = f1_score(fold5YTest, fold5PredLabels, zero_division=0)
 
 
 
@@ -197,22 +200,27 @@ shapValues5 = explainer5(fold5XTest)
 IO
 '''
 
-shapValues1 = pandas.DataFrame(shapValues1.values, columns = xTest.columns)
-shapValues1.to_csv(os.path.join(savePath, "shapValuesFold1.csv"), index=False)
-shapValues2 = pandas.DataFrame(shapValues2.values, columns = xTest.columns)
-shapValues2.to_csv(os.path.join(savePath, "shapValuesFold2.csv"), index=False)
-shapValues3 = pandas.DataFrame(shapValues3.values, columns = xTest.columns)
-shapValues3.to_csv(os.path.join(savePath, "shapValuesFold3.csv"), index=False)
-shapValues4 = pandas.DataFrame(shapValues4.values, columns = xTest.columns)
-shapValues4.to_csv(os.path.join(savePath, "shapValuesFold4.csv"), index=False)
-shapValues5 = pandas.DataFrame(shapValues5.values, columns = xTest.columns)
-shapValues5.to_csv(os.path.join(savePath, "shapValuesFold5.csv"), index=False)
+shapValues1 = pandas.DataFrame(shapValues1.values, columns = fold1XTest.columns)
+shapValues1.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold1.csv"), index=False)
+shapValues2 = pandas.DataFrame(shapValues2.values, columns = fold2XTest.columns)
+shapValues2.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold2.csv"), index=False)
+shapValues3 = pandas.DataFrame(shapValues3.values, columns = fold3XTest.columns)
+shapValues3.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold3.csv"), index=False)
+shapValues4 = pandas.DataFrame(shapValues4.values, columns = fold4XTest.columns)
+shapValues4.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold4.csv"), index=False)
+shapValues5 = pandas.DataFrame(shapValues5.values, columns = fold5XTest.columns)
+shapValues5.to_csv(os.path.join(savePath, f"{subject}_{session}_shapValuesFold5.csv"), index=False)
 
-fold1Model.save_model(os.path.join(savePath, "fold1Model.txt"))
-fold2Model.save_model(os.path.join(savePath, "fold2Model.txt"))
-fold3Model.save_model(os.path.join(savePath, "fold3Model.txt"))
-fold4Model.save_model(os.path.join(savePath, "fold4Model.txt"))
-fold5Model.save_model(os.path.join(savePath, "fold5Model.txt"))
+foldAccuracy.to_csv(os.path.join(savePath, f"{subject}_{session}_foldAccuracy.csv"), index=False)
+foldPrecision.to_csv(os.path.join(savePath, f"{subject}_{session}_foldPrecision.csv"), index=False)
+foldRecall.to_csv(os.path.join(savePath, f"{subject}_{session}_foldRecall.csv"), index=False)
+foldF1.to_csv(os.path.join(savePath, f"{subject}_{session}_foldF1.csv"), index=False)
+
+fold1Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold1Model.txt"))
+fold2Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold2Model.txt"))
+fold3Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold3Model.txt"))
+fold4Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold4Model.txt"))
+fold5Model.save_model(os.path.join(savePath, f"{subject}_{session}_fold5Model.txt"))
 
 '''
 Evaluate on holdout set
